@@ -5,7 +5,7 @@
 import java.util.*;
 
 // класс вершины, класс-шаблон наследует сравнимость
-class   Node<T extends Comparable> {
+class   Node<T extends Comparable>{
     // отец
     private Node<T> parent;
     // три ребенка
@@ -885,6 +885,46 @@ public class TwoThreeTree<T extends Comparable> extends AbstractSet<T> implement
         return size;
     }
 
+    public String min() {
+        return minMax(true);
+    }
+
+    public String max() {
+        return minMax(false);
+    }
+
+    private String minMax(boolean ways) {
+        StringBuilder sb = new StringBuilder();
+        try{
+            if (ways)
+                sb.append("[" + _min() + "] вершина с минимальным значением в дереве");
+            else
+                sb.append("[" + _max() + "] вершина с максимальным значением в дереве");
+            return sb.toString();
+        }
+        catch (ArrayIndexOutOfBoundsException exc) {
+            sb.append("Дерево пустое, вершины  с мин. значением и вершины с макс. значением нет");
+            return sb.toString();
+        }
+    }
+
+    private T _min() throws ArrayIndexOutOfBoundsException{
+        Object[] arr = toArray();
+        T min = (T) arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            min = min.compareTo((T)arr[i]) < 0 ? min : (T) arr[i];
+        }
+        return min;
+    }
+
+    private T _max() throws ArrayIndexOutOfBoundsException{
+        Object[] arr = toArray();
+        T max = (T) arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            max = max.compareTo((T) arr[i]) > 0 ? max : (T) arr[i];
+        }
+        return max;
+    }
 
     @Override
     public boolean contains(Object o) {
@@ -925,6 +965,7 @@ public class TwoThreeTree<T extends Comparable> extends AbstractSet<T> implement
 
     @Override
     public <T> T[] toArray(T[] a) {
+
         T[] r = a.length >= size ? a : (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
 
         return _toArray(r);

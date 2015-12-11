@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         TwoThreeTree<Integer> tree = new TwoThreeTree<>();
-        if (args.length == 1 || args.length == 2 || args.length == 3) {
+        if (args.length == 1 || args.length == 2 || args.length == 3 ) {
             String outFile = "";
             if (args.length == 2)
                 outFile = args[1];
@@ -29,7 +29,7 @@ public class Main {
                 char[] str = FileWorker.read(args[0]).toCharArray();
                 for (int i = 0; i < str.length; ++i) {
                     String buffer = "";
-                    int num_of_operation = 100; // 1 - add; -1 - del; 0 - find
+                    int num_of_operation = 100; // 1 - add; -1 - del; 0 - find; -2 - min; 2 - max
                     switch (str[i]) {
                         case '+':
                             num_of_operation = 1;
@@ -39,6 +39,12 @@ public class Main {
                             break;
                         case '?':
                             num_of_operation = 0;
+                            break;
+                        case 'm':
+                            num_of_operation = -2;
+                            break;
+                        case 'M':
+                            num_of_operation = 2;
                             break;
                         default:
                             break;
@@ -58,6 +64,12 @@ public class Main {
                             if (tree.contains(Integer.parseInt(buffer)) == true)
                                 FileWorker.write(out, buffer + " существует в дереве");
                             else FileWorker.write(out, buffer + " не существует в дереве");
+                            break;
+                        case -2:
+                            FileWorker.write(out, tree.min());
+                            break;
+                        case 2:
+                            FileWorker.write(out, tree.max());
                             break;
                         default:
                             break;
