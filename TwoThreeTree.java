@@ -866,10 +866,13 @@ public class TwoThreeTree<T extends Comparable> extends AbstractSet<T> implement
     // возвращает значение leftValue самого левого ребенка
     public T first() {
         Node<T> node = root;
-        while (node.leftChild() != null) {
-            node = node.leftChild();
+        if (node != null) {
+            while (node.leftChild() != null) {
+                node = node.leftChild();
+            }
+            return node.isThreeNode() ? node.leftVal() : node.val();
         }
-        return node.isThreeNode() ? node.leftVal() : node.val();
+        return null;
     }
 
     // бОльшее значение самого правого ребенка
@@ -896,34 +899,17 @@ public class TwoThreeTree<T extends Comparable> extends AbstractSet<T> implement
     private String minMax(boolean ways) {
         StringBuilder sb = new StringBuilder();
         try{
-            if (ways)
-                sb.append("[" + _min() + "] вершина с минимальным значением в дереве");
-            else
-                sb.append("[" + _max() + "] вершина с максимальным значением в дереве");
+            if (ways && first()!=null)
+                sb.append("[" + first() + "] вершина с минимальным значением в дереве");
+            else if (!ways && last()!=null)
+                sb.append("[" + last() + "] вершина с максимальным значением в дереве");
+            else throw new NullPointerException();
             return sb.toString();
         }
-        catch (ArrayIndexOutOfBoundsException exc) {
+        catch (NullPointerException exc) {
             sb.append("Дерево пустое, вершины  с мин. значением и вершины с макс. значением нет");
             return sb.toString();
         }
-    }
-
-    private T _min() throws ArrayIndexOutOfBoundsException{
-        Object[] arr = toArray();
-        T min = (T) arr[0];
-        for (int i = 1; i < arr.length; i++) {
-            min = min.compareTo((T)arr[i]) < 0 ? min : (T) arr[i];
-        }
-        return min;
-    }
-
-    private T _max() throws ArrayIndexOutOfBoundsException{
-        Object[] arr = toArray();
-        T max = (T) arr[0];
-        for (int i = 1; i < arr.length; i++) {
-            max = max.compareTo((T) arr[i]) > 0 ? max : (T) arr[i];
-        }
-        return max;
     }
 
     @Override
